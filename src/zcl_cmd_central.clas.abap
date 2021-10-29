@@ -327,16 +327,38 @@ class zcl_cmd_central definition
           datax type ref to cmds_ei_vmd_central_data_xflag.
     methods: constructor importing i_data  type ref to cmds_ei_vmd_central_data
                                    i_datax type ref to cmds_ei_vmd_central_data_xflag.
-endclass.
+private section.
+ENDCLASS.
 
 
 
-class zcl_cmd_central implementation.
+CLASS ZCL_CMD_CENTRAL IMPLEMENTATION.
 
 
   method constructor.
     data = i_data.
     datax = i_datax.
+  endmethod.
+
+
+  method create_instance.
+    if i_extension_id is initial.
+      r_central = new #( i_data = i_data
+                         i_datax =  i_datax ).
+    else.
+      data: subclass type ref to object.
+      try.
+          data(subclass_abs_name) = zcl_cmd_extensions=>get_extension_class_abs_name( id = i_extension_id type = zcl_cmd_extensions=>class_extension-central ).
+          create object subclass type (subclass_abs_name)
+           exporting
+            i_data = i_data
+            i_datax =  i_datax.
+          r_central ?= subclass.
+        catch: zcx_cmd_no_extension.
+          r_central = new #( i_data = i_data
+                       i_datax =  i_datax ).
+      endtry.
+    endif.
   endmethod.
 
 
@@ -655,25 +677,4 @@ class zcl_cmd_central implementation.
 
 
   method set_xzemp. data->xzemp = i_xzemp. datax->xzemp = abap_true . endmethod.
-
-  method create_instance.
-    if i_extension_id is initial.
-      r_central = new #( i_data = i_data
-                         i_datax =  i_datax ).
-    else.
-      data: subclass type ref to object.
-      try.
-          data(subclass_abs_name) = zcl_cmd_extensions=>get_extension_class_abs_name( id = i_extension_id type = zcl_cmd_extensions=>class_extension-central ).
-          create object subclass type (subclass_abs_name)
-           exporting
-            i_data = i_data
-            i_datax =  i_datax.
-          r_central ?= subclass.
-        catch: zcx_cmd_no_extension.
-          r_central = new #( i_data = i_data
-                       i_datax =  i_datax ).
-      endtry.
-    endif.
-  endmethod.
-
-endclass.
+ENDCLASS.

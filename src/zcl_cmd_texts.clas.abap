@@ -41,11 +41,12 @@ class zcl_cmd_texts definition
       importing
         !i_texts type ref to cvis_ei_cvis_text .
 
-endclass.
+private section.
+ENDCLASS.
 
 
 
-class zcl_cmd_texts implementation.
+CLASS ZCL_CMD_TEXTS IMPLEMENTATION.
 
 
   method add_text.
@@ -85,6 +86,24 @@ class zcl_cmd_texts implementation.
   endmethod.
 
 
+  method create_instance.
+    if i_extension_id is initial.
+      r_texts = new #( i_texts = i_texts ).
+    else.
+      data: subclass type ref to object.
+      try.
+          data(sublcass_abs_name) = zcl_cmd_extensions=>get_extension_class_abs_name( id = i_extension_id type = zcl_cmd_extensions=>class_extension-texts ).
+          create object subclass type (sublcass_abs_name)
+           exporting
+            i_texts       = i_texts.
+          r_texts ?= subclass.
+        catch zcx_cmd_no_extension.
+          r_texts = new #( i_texts = i_texts ).
+      endtry.
+    endif.
+  endmethod.
+
+
   method delete_text.
     assign ref_data->texts[ data_key-text_id = i_id data_key-langu = i_language ] to field-symbol(<tx>).
     if sy-subrc eq 0.
@@ -110,21 +129,4 @@ class zcl_cmd_texts implementation.
           v1 = conv #( i_id ).
     endif.
   endmethod.
-  method create_instance.
-    if i_extension_id is initial.
-      r_texts = new #( i_texts = i_texts ).
-    else.
-      data: subclass type ref to object.
-      try.
-          data(sublcass_abs_name) = zcl_cmd_extensions=>get_extension_class_abs_name( id = i_extension_id type = zcl_cmd_extensions=>class_extension-texts ).
-          create object subclass type (sublcass_abs_name)
-           exporting
-            i_texts       = i_texts.
-          r_texts ?= subclass.
-        catch zcx_cmd_no_extension.
-          r_texts = new #( i_texts = i_texts ).
-      endtry.
-    endif.
-  endmethod.
-
-endclass.
+ENDCLASS.

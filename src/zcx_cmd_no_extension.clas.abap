@@ -6,9 +6,9 @@ class zcx_cmd_no_extension definition
   public section.
   protected section.
   private section.
-endclass.
+ENDCLASS.
 
 
 
-class zcx_cmd_no_extension implementation.
-endclass.
+CLASS ZCX_CMD_NO_EXTENSION IMPLEMENTATION.
+ENDCLASS.

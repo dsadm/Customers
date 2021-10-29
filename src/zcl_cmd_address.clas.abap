@@ -323,11 +323,12 @@ class zcl_cmd_address definition
     data: address type ref to cvis_ei_address1.
     methods: constructor importing i_extension_id   type guid_32 optional.
 
-endclass.
+private section.
+ENDCLASS.
 
 
 
-class zcl_cmd_address implementation.
+CLASS ZCL_CMD_ADDRESS IMPLEMENTATION.
 
 
   method add_email.
@@ -482,6 +483,29 @@ class zcl_cmd_address implementation.
       <url>-contact-task = zcl_cmd_util=>mode-modify.
       <url>-contact-data-uri = i_url.
       <url>-contact-data-std_no = i_standard.
+    endif.
+  endmethod.
+
+
+  method constructor.
+    extension_id = i_extension_id.
+  endmethod.
+
+
+  method create_instance.
+    if i_extension_id is initial.
+      r_address = new #( ).
+    else.
+      data: subclass type ref to object.
+      try.
+          data(sublcass_abs_name) = zcl_cmd_extensions=>get_extension_class_abs_name( id = i_extension_id type = zcl_cmd_extensions=>class_extension-address ).
+          create object subclass type (sublcass_abs_name)
+           exporting
+            i_extension_id  = i_extension_id.
+          r_address ?= subclass.
+        catch zcx_cmd_no_extension.
+          r_address = new #( ).
+      endtry.
     endif.
   endmethod.
 
@@ -1023,25 +1047,4 @@ class zcl_cmd_address implementation.
     address->postal-data-transpzone = i_transpzone. address->postal-datax-transpzone = abap_true .
     address->task = zcl_cmd_util=>mode-modify.
   endmethod.
-  method create_instance.
-    if i_extension_id is initial.
-      r_address = new #( ).
-    else.
-      data: subclass type ref to object.
-      try.
-          data(sublcass_abs_name) = zcl_cmd_extensions=>get_extension_class_abs_name( id = i_extension_id type = zcl_cmd_extensions=>class_extension-address ).
-          create object subclass type (sublcass_abs_name)
-           exporting
-            i_extension_id  = i_extension_id.
-          r_address ?= subclass.
-        catch zcx_cmd_no_extension.
-          r_address = new #( ).
-      endtry.
-    endif.
-  endmethod.
-
-  method constructor.
-    extension_id = i_extension_id.
-  endmethod.
-
-endclass.
+ENDCLASS.

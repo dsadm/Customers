@@ -44,11 +44,11 @@ class zcl_cmd_util definition
 
   protected section.
   private section.
-endclass.
+ENDCLASS.
 
 
 
-class zcl_cmd_util implementation.
+CLASS ZCL_CMD_UTIL IMPLEMENTATION.
 
 
   method commit_work.
@@ -82,6 +82,4 @@ class zcl_cmd_util implementation.
       enddo.
     endif.
   endmethod.
-
-
-endclass.
+ENDCLASS.

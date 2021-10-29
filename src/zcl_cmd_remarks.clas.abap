@@ -28,11 +28,12 @@ class zcl_cmd_remarks definition
     methods constructor
       importing
         !i_data type ref to cvis_ei_cvi_rem .
-endclass.
+private section.
+ENDCLASS.
 
 
 
-class zcl_cmd_remarks implementation.
+CLASS ZCL_CMD_REMARKS IMPLEMENTATION.
 
 
   method add_remark.
@@ -87,16 +88,6 @@ class zcl_cmd_remarks implementation.
   endmethod.
 
 
-  method delete_remark.
-    if i_language_iso is not initial.
-      assign ref_data->remarks[ data-langu_iso = i_language_iso ] to field-symbol(<rem>).
-    elseif i_language is not initial.
-      assign ref_data->remarks[ data-langu = i_language ] to <rem>.
-    endif.
-    if <rem> is  assigned.
-      <rem>-task = zcl_cmd_util=>mode-delete.
-    endif.
-  endmethod.
   method create_instance.
     if i_extension_id is initial.
       r_remarks = new #( i_data = i_data ).
@@ -114,4 +105,15 @@ class zcl_cmd_remarks implementation.
     endif.
   endmethod.
 
-endclass.
+
+  method delete_remark.
+    if i_language_iso is not initial.
+      assign ref_data->remarks[ data-langu_iso = i_language_iso ] to field-symbol(<rem>).
+    elseif i_language is not initial.
+      assign ref_data->remarks[ data-langu = i_language ] to <rem>.
+    endif.
+    if <rem> is  assigned.
+      <rem>-task = zcl_cmd_util=>mode-delete.
+    endif.
+  endmethod.
+ENDCLASS.

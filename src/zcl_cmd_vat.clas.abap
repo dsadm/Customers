@@ -34,11 +34,12 @@ class zcl_cmd_vat definition
   protected section.
     data: ref_data type ref to cvis_ei_vat_numbers.
     methods constructor importing i_vat type ref to cvis_ei_vat_numbers.
-endclass.
+private section.
+ENDCLASS.
 
 
 
-class zcl_cmd_vat implementation.
+CLASS ZCL_CMD_VAT IMPLEMENTATION.
 
 
   method add_vat_number.
@@ -58,6 +59,7 @@ class zcl_cmd_vat implementation.
 
   endmethod.
 
+
   method change_vat_number.
 
     assign ref_data->vat_numbers[ data_key-land1 = i_country ] to field-symbol(<vat>).
@@ -73,37 +75,12 @@ class zcl_cmd_vat implementation.
 
   endmethod.
 
-  method delete_vat_number.
-
-    assign ref_data->vat_numbers[ data_key-land1 = i_country ] to field-symbol(<vat>).
-    if sy-subrc eq 0.
-      <vat>-task = zcl_cmd_util=>mode-delete.
-    else.
-      raise exception type zcx_cmd_customer
-        exporting
-          no = 009
-          v1 = conv #( i_country ).
-    endif.
-
-  endmethod.
-
-  method get_vat_number.
-
-    assign ref_data->vat_numbers[ data_key-land1 = i_country ] to field-symbol(<vat>).
-    if sy-subrc eq 0.
-      r_vat_no = <vat>-data-stceg.
-    else.
-      raise exception type zcx_cmd_customer
-        exporting
-          no = 009
-          v1 = conv #( i_country ).
-    endif.
-
-  endmethod.
 
   method constructor.
     ref_data = i_vat.
   endmethod.
+
+
   method create_instance.
     if i_extension_id is initial.
       r_vat = new #( i_vat = i_vat ).
@@ -121,4 +98,33 @@ class zcl_cmd_vat implementation.
     endif.
   endmethod.
 
-endclass.
+
+  method delete_vat_number.
+
+    assign ref_data->vat_numbers[ data_key-land1 = i_country ] to field-symbol(<vat>).
+    if sy-subrc eq 0.
+      <vat>-task = zcl_cmd_util=>mode-delete.
+    else.
+      raise exception type zcx_cmd_customer
+        exporting
+          no = 009
+          v1 = conv #( i_country ).
+    endif.
+
+  endmethod.
+
+
+  method get_vat_number.
+
+    assign ref_data->vat_numbers[ data_key-land1 = i_country ] to field-symbol(<vat>).
+    if sy-subrc eq 0.
+      r_vat_no = <vat>-data-stceg.
+    else.
+      raise exception type zcx_cmd_customer
+        exporting
+          no = 009
+          v1 = conv #( i_country ).
+    endif.
+
+  endmethod.
+ENDCLASS.

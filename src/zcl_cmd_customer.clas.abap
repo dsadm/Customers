@@ -15,7 +15,7 @@ class zcl_cmd_customer definition
 
     methods constructor
       importing
-        value(i_customer) type kna1-kunnr optional
+        value(i_customer)          type kna1-kunnr optional
         value(i_extension_classes) type zcl_cmd_extensions=>tt_extension_classes optional
       raising
         zcx_cmd_customer .
@@ -151,6 +151,7 @@ class zcl_cmd_customer definition
 
 
 
+private section.
 ENDCLASS.
 
 
@@ -239,7 +240,7 @@ CLASS ZCL_CMD_CUSTOMER IMPLEMENTATION.
 
 
   method constructor.
-    customer = i_customer.
+    customer = |{ i_customer alpha = in }|.
     extension_id = zcl_cmd_extensions=>set_extensions( extensions = i_extension_classes ).
     if customer is initial or customer co '0'.
       mode = zcl_cmd_util=>mode-create.
@@ -440,9 +441,9 @@ CLASS ZCL_CMD_CUSTOMER IMPLEMENTATION.
                                                          ] to field-symbol(<cont>).
     if sy-subrc eq 0.
       try.
-        r_contact ?= zcl_cmd_contact=>create_instance( i_extension_id = extension_id
-                                                       i_customer = customer
-                                                       i_contact  = <cont>-data_key-parnr ).
+          r_contact ?= zcl_cmd_contact=>create_instance( i_extension_id = extension_id
+                                                         i_customer = customer
+                                                         i_contact  = <cont>-data_key-parnr ).
           r_contact->set_data( ref #( <cont> ) ).
           r_contact->set_mode( zcl_cmd_util=>mode-change ).
         catch zcx_cmd_customer into data(e).
@@ -617,7 +618,4 @@ CLASS ZCL_CMD_CUSTOMER IMPLEMENTATION.
 *       _collect  = _collect    " Initially only collect lock
       .
   endmethod.
-
-
-
 ENDCLASS.

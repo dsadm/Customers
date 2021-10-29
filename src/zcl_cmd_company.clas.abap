@@ -5,6 +5,7 @@ class zcl_cmd_company definition
   public section.
 
     data texts type ref to zcl_cmd_texts .
+    data dunning type ref to zcl_cmd_dunning.
     data: extension_id type guid_32 read-only.
     class-methods: create_instance importing i_extension_id   type guid_32
                                    returning value(r_company) type ref to zcl_cmd_company.
@@ -292,11 +293,40 @@ class zcl_cmd_company definition
     methods: constructor importing i_extension_id type guid_32 optional.
 
 
-endclass.
+private section.
+ENDCLASS.
 
 
 
-class zcl_cmd_company implementation.
+CLASS ZCL_CMD_COMPANY IMPLEMENTATION.
+
+
+  method constructor.
+    extension_id = i_extension_id.
+  endmethod.
+
+
+  method create_instance.
+    if i_extension_id is initial.
+      r_company = new #(  ).
+    else.
+      data: subclass type ref to object.
+      try.
+          data(sublcass_abs_name) = zcl_cmd_extensions=>get_extension_class_abs_name( id = i_extension_id type = zcl_cmd_extensions=>class_extension-company ).
+          create object subclass type (sublcass_abs_name)
+           exporting
+            i_extension_id  = i_extension_id.
+          r_company ?= subclass.
+        catch zcx_cmd_no_extension.
+          r_company = new #(  ).
+      endtry.
+    endif.
+  endmethod.
+
+
+  method get_data.
+    r_company = ref_data.
+  endmethod.
 
 
   method set_akont.
@@ -350,6 +380,7 @@ class zcl_cmd_company implementation.
   method set_data.
     ref_data = i_company.
     texts ?= zcl_cmd_texts=>create_instance( i_extension_id = extension_id i_texts = ref #( ref_data->texts ) ).
+    dunning ?= zcl_cmd_dunning=>create_instance( i_extension_id = extension_id i_dunning = ref #( ref_data->dunning ) ).
     r_company = me.
   endmethod.
 
@@ -712,29 +743,4 @@ class zcl_cmd_company implementation.
     ref_data->data-zwels = i_zwels. ref_data->datax-zwels = abap_true .
     r_company = me.
   endmethod.
-  method get_data.
-    r_company = ref_data.
-  endmethod.
-
-  method create_instance.
-    if i_extension_id is initial.
-      r_company = new #(  ).
-    else.
-      data: subclass type ref to object.
-      try.
-          data(sublcass_abs_name) = zcl_cmd_extensions=>get_extension_class_abs_name( id = i_extension_id type = zcl_cmd_extensions=>class_extension-company ).
-          create object subclass type (sublcass_abs_name)
-           exporting
-            i_extension_id  = i_extension_id.
-          r_company ?= subclass.
-        catch zcx_cmd_no_extension.
-          r_company = new #(  ).
-      endtry.
-    endif.
-  endmethod.
-
-  method constructor.
-    extension_id = i_extension_id.
-  endmethod.
-
-endclass.
+ENDCLASS.

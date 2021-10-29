@@ -701,11 +701,12 @@ class zcl_cmd_contact definition
       raising
         zcx_cmd_customer .
 
-endclass.
+private section.
+ENDCLASS.
 
 
 
-class zcl_cmd_contact implementation.
+CLASS ZCL_CMD_CONTACT IMPLEMENTATION.
 
 
   method add_business_email.
@@ -995,6 +996,26 @@ class zcl_cmd_contact implementation.
       endif.
     endif.
 
+  endmethod.
+
+
+  method create_instance.
+    if i_extension_id is initial.
+      contact = new #( i_contact = i_contact i_customer = i_customer ).
+    else.
+      data: subclass type ref to object.
+            try.
+      data(sublcass_abs_name) = zcl_cmd_extensions=>get_extension_class_abs_name( id = i_extension_id type = zcl_cmd_extensions=>class_extension-contact ).
+      create object subclass type (sublcass_abs_name)
+       exporting
+        i_extension_id  = i_extension_id
+        i_contact       = i_contact
+        i_customer      = i_customer.
+      contact ?= subclass.
+      catch zcx_cmd_no_extension.
+       contact = new #( i_contact = i_contact i_customer = i_customer ).
+      endtry.
+    endif.
   endmethod.
 
 
@@ -2158,24 +2179,4 @@ class zcl_cmd_contact implementation.
       ref_data->task = mode.
     endif.
   endmethod.
-
-  method create_instance.
-    if i_extension_id is initial.
-      contact = new #( i_contact = i_contact i_customer = i_customer ).
-    else.
-      data: subclass type ref to object.
-            try.
-      data(sublcass_abs_name) = zcl_cmd_extensions=>get_extension_class_abs_name( id = i_extension_id type = zcl_cmd_extensions=>class_extension-contact ).
-      create object subclass type (sublcass_abs_name)
-       exporting
-        i_extension_id  = i_extension_id
-        i_contact       = i_contact
-        i_customer      = i_customer.
-      contact ?= subclass.
-      catch zcx_cmd_no_extension.
-       contact = new #( i_contact = i_contact i_customer = i_customer ).
-      endtry.
-    endif.
-  endmethod.
-
-endclass.
+ENDCLASS.

@@ -25,11 +25,11 @@ class zcx_cmd_customer definition
   protected section.
   private section.
     data: messages type bapiret2_t.
-endclass.
+ENDCLASS.
 
 
 
-class zcx_cmd_customer implementation.
+CLASS ZCX_CMD_CUSTOMER IMPLEMENTATION.
 
 
   method constructor ##ADT_SUPPRESS_GENERATION.
@@ -59,6 +59,8 @@ class zcx_cmd_customer implementation.
     endif.
 
   endmethod.
+
+
   method get_messages.
     if messages is not initial.
       r_messages = messages.
@@ -81,4 +83,4 @@ class zcx_cmd_customer implementation.
 
     endif.
   endmethod.
-endclass.
+ENDCLASS.

@@ -236,13 +236,14 @@ class zcl_cmd_sales definition
   protected section.
     data: ref_data type ref to cmds_ei_sales.
     data: extension_id type guid_32.
-    methods: contructor importing i_extension_id type guid_32 optional.
+    methods: constructor importing i_extension_id type guid_32 optional.
 
-endclass.
+private section.
+ENDCLASS.
 
 
 
-class zcl_cmd_sales implementation.
+CLASS ZCL_CMD_SALES IMPLEMENTATION.
 
 
   method add_partner_function.
@@ -288,6 +289,27 @@ class zcl_cmd_sales implementation.
         ref_data->functions-current_state = zcl_cmd_util=>mode-change..
         ref_data->datax-vkbur = abap_true.
       endif.
+    endif.
+  endmethod.
+
+
+  method constructor.
+    extension_id = i_extension_id.
+  endmethod.
+
+
+  method create_instance.
+    if i_extension_id is initial.
+      r_sales = new #( ).
+    else.
+      data: subclass type ref to object.
+      try.
+          data(sublcass_abs_name) = zcl_cmd_extensions=>get_extension_class_abs_name( id = i_extension_id type = zcl_cmd_extensions=>class_extension-sales ).
+          create object subclass type (sublcass_abs_name).
+          r_sales ?= subclass.
+        catch zcx_cmd_no_extension.
+           r_sales = new #( ).
+      endtry.
     endif.
   endmethod.
 
@@ -669,23 +691,4 @@ class zcl_cmd_sales implementation.
   method set_zterm.
     ref_data->data-zterm = i_zterm. ref_data->datax-zterm = abap_true .
   endmethod.
-  method create_instance.
-    if i_extension_id is initial.
-      r_sales = new #( ).
-    else.
-      data: subclass type ref to object.
-      try.
-          data(sublcass_abs_name) = zcl_cmd_extensions=>get_extension_class_abs_name( id = i_extension_id type = zcl_cmd_extensions=>class_extension-sales ).
-          create object subclass type (sublcass_abs_name).
-          r_sales ?= subclass.
-        catch zcx_cmd_no_extension.
-           r_sales = new #( ).
-      endtry.
-    endif.
-  endmethod.
-
-  method contructor.
-    extension_id = i_extension_id.
-  endmethod.
-
-endclass.
+ENDCLASS.
