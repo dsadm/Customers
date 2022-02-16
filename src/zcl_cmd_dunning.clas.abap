@@ -23,11 +23,11 @@ class zcl_cmd_dunning definition
           i_dunning type ref to cmds_ei_dunning_s.
 
   private section.
-ENDCLASS.
+endclass.
 
 
 
-CLASS ZCL_CMD_DUNNING IMPLEMENTATION.
+class zcl_cmd_dunning implementation.
 
 
   method constructor.
@@ -62,7 +62,7 @@ CLASS ZCL_CMD_DUNNING IMPLEMENTATION.
   method set_busab.
     assign ref_data->dunning[ data_key-maber = i_maber ] to field-symbol(<dunning>).
     if sy-subrc = 0.
-      <dunning>-data-busab = i_busab.
+      <dunning>-data-busab  = i_busab.
       <dunning>-datax-busab = abap_true.
       <dunning>-task = zcl_cmd_util=>mode-modify.
     endif.
@@ -72,7 +72,7 @@ CLASS ZCL_CMD_DUNNING IMPLEMENTATION.
   method set_gmvdt.
     assign ref_data->dunning[ data_key-maber = i_maber ] to field-symbol(<dunning>).
     if sy-subrc = 0.
-      <dunning>-data-gmvdt = i_gmvdt.
+      <dunning>-data-gmvdt  = i_gmvdt.
       <dunning>-datax-gmvdt = abap_true.
       <dunning>-task = zcl_cmd_util=>mode-modify.
     endif.
@@ -82,7 +82,7 @@ CLASS ZCL_CMD_DUNNING IMPLEMENTATION.
   method set_knrma.
     assign ref_data->dunning[ data_key-maber = i_maber ] to field-symbol(<dunning>).
     if sy-subrc = 0.
-      <dunning>-data-knrma = i_knrma.
+      <dunning>-data-knrma  = i_knrma.
       <dunning>-datax-knrma = abap_true.
       <dunning>-task = zcl_cmd_util=>mode-modify.
     endif.
@@ -92,7 +92,7 @@ CLASS ZCL_CMD_DUNNING IMPLEMENTATION.
   method set_madat.
     assign ref_data->dunning[ data_key-maber = i_maber ] to field-symbol(<dunning>).
     if sy-subrc = 0.
-      <dunning>-data-madat = i_madat.
+      <dunning>-data-madat  = i_madat.
       <dunning>-datax-madat = abap_true.
       <dunning>-task = zcl_cmd_util=>mode-modify.
     endif.
@@ -102,9 +102,10 @@ CLASS ZCL_CMD_DUNNING IMPLEMENTATION.
   method set_mahna.
     assign ref_data->dunning[ data_key = i_maber ] to field-symbol(<dunning>).
     if sy-subrc <> 0.
-      insert value #( task        = zcl_cmd_util=>mode-create
-                      data-mahna  = i_mahna
-                      datax-mahna = abap_true
+      insert value #( task           = zcl_cmd_util=>mode-create
+                      data_key-maber = i_maber
+                      data-mahna     = i_mahna
+                      datax-mahna    = abap_true
                      ) into table ref_data->dunning assigning <dunning>.
     else.
       <dunning>-data-mahna  = i_mahna.
@@ -117,7 +118,7 @@ CLASS ZCL_CMD_DUNNING IMPLEMENTATION.
   method set_mahns.
     assign ref_data->dunning[ data_key-maber = i_maber ] to field-symbol(<dunning>).
     if sy-subrc = 0.
-      <dunning>-data-mahns = i_mahns.
+      <dunning>-data-mahns  = i_mahns.
       <dunning>-datax-mahns = abap_true.
       <dunning>-task = zcl_cmd_util=>mode-modify.
     endif.
@@ -127,9 +128,9 @@ CLASS ZCL_CMD_DUNNING IMPLEMENTATION.
   method set_mansp.
     assign ref_data->dunning[ data_key-maber = i_maber ] to field-symbol(<dunning>).
     if sy-subrc = 0.
-      <dunning>-data-mansp = i_mansp.
+      <dunning>-data-mansp  = i_mansp.
       <dunning>-datax-mansp = abap_true.
       <dunning>-task = zcl_cmd_util=>mode-modify.
     endif.
   endmethod.
-ENDCLASS.
+endclass.
